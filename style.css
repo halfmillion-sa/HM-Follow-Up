@@ -12,10 +12,11 @@ body {
 
 /* لون مخصص بدل الأزرق */
 .bg-custom {
-    background-color: #7EC8B3; /* اللون اللي اخترته */
-    color: white;
+    background-color: #7EC8B3 !important; /* اللون اللي اخترته */
+    color: white !important;
 }
 
 .bg-custom:hover {
-    background-color: #6bb39f; /* درجة أغمق عند التمرير */
+    background-color: #6bb39f !important; /* درجة أغمق عند التمرير */
 }
+
