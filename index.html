@@ -683,10 +683,11 @@
             const user = users.find(u => u.username === username && u.password === password);
             
             if (user) {
-                currentUser = user;
-                document.getElementById('loginScreen').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
-                document.getElementById('currentUserName').textContent = user.username;
+    currentUser = user;
+    localStorage.setItem("currentUser", JSON.stringify(user)); // ✅ نحفظ المستخدم
+    
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
                 
                 // Set permissions based on role
                 if (user.role === 'admin') {
@@ -729,8 +730,10 @@
             currentUser = null;
             document.getElementById('dashboard').classList.add('hidden');
             document.getElementById('loginScreen').classList.remove('hidden');
+localStorage.removeItem("currentUser"); // ✅ نحذف بيانات المستخدم المحفوظة
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
+
         });
         // User menu toggle
         document.getElementById('userMenuBtn').addEventListener('click', function() {
@@ -878,17 +881,19 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${ticket.reminder48h ? '✅' : '❌'}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" data-i18n="${ticket.closeReason || 'open'}">${ticket.closeReason ? translations[currentLang][ticket.closeReason] || ticket.closeReason : '-'}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 admin-only hidden">${ticket.agent}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-    ${ticket.status === 'open' ? 
-        `<button class="text-blue-600 hover:text-blue-900 mr-2 close-ticket-btn" data-id="${ticket.id}" title="${currentLang === 'ar' ? 'إغلاق التذكرة' : 'Close Ticket'}">
-            <i class="fas fa-check-circle"></i> ${currentLang === 'ar' ? 'إغلاق' : 'Close'}
-        </button>` : 
-        `<span class="text-gray-500">${currentLang === 'ar' ? 'مغلقة' : 'Closed'}</span>`}
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+    <div class="flex flex-col items-center space-y-1">
+        ${ticket.status === 'open' ? 
+            `<button class="text-blue-600 hover:text-blue-900 close-ticket-btn" data-id="${ticket.id}">
+                <i class="fas fa-check-circle"></i> ${currentLang === 'ar' ? 'إغلاق' : 'Close'}
+            </button>` : 
+            `<span class="text-gray-500">${currentLang === 'ar' ? 'مغلقة' : 'Closed'}</span>`}
 
-    ${currentUser && currentUser.role === 'admin' ? 
-        `<button class="text-red-600 hover:text-red-900 ml-2 delete-ticket-btn" data-id="${ticket.id}" title="${currentLang === 'ar' ? 'حذف التذكرة' : 'Delete Ticket'}">
-            <i class="fas fa-trash-alt"></i> ${currentLang === 'ar' ? 'حذف' : 'Delete'}
-        </button>` : ''}
+        ${currentUser && currentUser.role === 'admin' ? 
+            `<button class="text-red-600 hover:text-red-900 delete-ticket-btn" data-id="${ticket.id}">
+                <i class="fas fa-trash-alt"></i> ${currentLang === 'ar' ? 'حذف' : 'Delete'}
+            </button>` : ''}
+    </div>
 </td>
                 `;
                 
@@ -1310,6 +1315,24 @@ document.addEventListener('click', function(e) {
     }
 });
         // Initialize the app
+function init() {
+    // ✅ استرجاع المستخدم من التخزين
+    const savedUser = localStorage.getItem("currentUser");
+    if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
+        document.getElementById('currentUserName').textContent = currentUser.username;
+        if (currentUser.role === 'admin') {
+            document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('hidden'));
+        }
+    }
+
+    // ✅ استرجاع التذاكر من التخزين
+    const savedTickets = localStorage.getItem("tickets");
+    if (savedTickets) {
+        tickets = JSON.parse(savedTickets);
+    }
         function init() {
             // Set today's date and current time as default
             const today = new Date();
