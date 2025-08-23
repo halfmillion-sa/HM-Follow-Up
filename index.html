@@ -610,37 +610,47 @@
     });
 }
 
-        // Shared tickets list (start empty, load from localStorage)
-let tickets = [];
-        // Sample data for users
-        let users = [
-            {
-                id: 1,
-                username: "Abdullah",
-                password: "A",
-                role: "admin",
-                status: "active",
-                lastLogin: new Date().toISOString().split('T')[0]
-            },
-            {
-                id: 2,
-                username: "Admin",
-                password: "Admin123",
-                role: "admin",
-                status: "active",
-                lastLogin: new Date().toISOString().split('T')[0]
-            },
-            {
-                id: 3,
-                username: "Agent1",
-                password: "Agent123",
-                role: "agent",
-                status: "active",
-                lastLogin: new Date().toISOString().split('T')[0]
-            }
-        ];
-        // Current user
-        let currentUser = null;
+        // ✅ تحميل التذاكر من localStorage أو يبدأ فاضي
+let tickets = JSON.parse(localStorage.getItem("tickets")) || [];
+
+// ✅ تحميل المستخدمين من localStorage أو يبدأ بالـ sample data أول مرة فقط
+let users = JSON.parse(localStorage.getItem("users")) || [
+    {
+        id: 1,
+        username: "Abdullah",
+        password: "A",
+        role: "admin",
+        status: "active",
+        lastLogin: new Date().toISOString().split('T')[0]
+    },
+    {
+        id: 2,
+        username: "Admin",
+        password: "Admin123",
+        role: "admin",
+        status: "active",
+        lastLogin: new Date().toISOString().split('T')[0]
+    },
+    {
+        id: 3,
+        username: "Agent1",
+        password: "Agent123",
+        role: "agent",
+        status: "active",
+        lastLogin: new Date().toISOString().split('T')[0]
+    }
+];
+
+// ✅ تحميل المستخدم الحالي من localStorage (علشان يظل مسجل حتى بعد التحديث)
+let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
+// إذا أول مرة يفتح الموقع، نخزن القيم الافتراضية
+if (!localStorage.getItem("users")) {
+    localStorage.setItem("users", JSON.stringify(users));
+}
+if (!localStorage.getItem("tickets")) {
+    localStorage.setItem("tickets", JSON.stringify(tickets));
+}
+
         // Login functionality
         document.getElementById('loginBtn').addEventListener('click', function(e) {
     e.preventDefault();
@@ -1291,23 +1301,7 @@ localStorage.setItem("tickets", JSON.stringify(tickets));
 });
         // Initialize the app
 function init() {
-    // ✅ استرجاع التذاكر من التخزين
-    const savedTickets = localStorage.getItem("tickets");
-    if (savedTickets) {
-        tickets = JSON.parse(savedTickets);
-    }
-
-    // ✅ استرجاع المستخدمين من التخزين
-    const savedUsers = localStorage.getItem("users");
-    if (savedUsers) {
-        users = JSON.parse(savedUsers);
-    }
-
-    // ✅ استرجاع المستخدم الحالي (علشان يظل مسجل حتى بعد تحديث الصفحة)
-    const savedUser = localStorage.getItem("currentUser");
-    if (savedUser) {
-        currentUser = JSON.parse(savedUser);
-
+    if (currentUser) {
         document.getElementById('loginScreen').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
         document.getElementById('currentUserName').textContent = currentUser.username;
@@ -1319,12 +1313,13 @@ function init() {
         }
     }
 
-    // ✅ تحميل الجداول
     loadTickets();
     loadUsers();
-
-    // ✅ تحميل الترجمة
     translatePage();
 }
+// ✅ نشغل init عند فتح الصفحة
+window.onload = init;
 
+
+      
    </script>
