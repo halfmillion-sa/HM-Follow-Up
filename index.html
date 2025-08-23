@@ -913,14 +913,19 @@ let tickets = [];
             
             // Add event listeners to delete buttons
             document.querySelectorAll('.delete-user-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const userId = parseInt(this.getAttribute('data-id'));
-                    if (confirm(currentLang === 'ar' ? 'هل أنت متأكد من حذف هذا المستخدم؟' : 'Are you sure you want to delete this user?')) {
-                        users = users.filter(u => u.id !== userId);
-                        loadUsers();
-                    }
-                });
-            });
+    btn.addEventListener('click', function() {
+        const userId = parseInt(this.getAttribute('data-id'));
+        if (confirm(currentLang === 'ar' ? 'هل أنت متأكد من حذف هذا المستخدم؟' : 'Are you sure you want to delete this user?')) {
+            users = users.filter(u => u.id !== userId);
+
+            // ✅ نحفظ التغييرات في التخزين
+            localStorage.setItem("users", JSON.stringify(users));
+
+            loadUsers();
+        }
+    });
+});
+
             
             // Populate agent dropdown in search
             const agentDropdown = document.getElementById('searchAgent');
@@ -1068,36 +1073,22 @@ localStorage.setItem("tickets", JSON.stringify(tickets));
             }
             
             if (currentUser.role === 'admin') {
-                if (agent) {
-                    filteredTickets = filteredTickets.filter(t => t.agent === agent);
-                }
-                if (status) {
-                    filteredTickets = filteredTickets.filter(t => t.status === status);
-                }
-                if (fromDate) {
-                    filteredTickets = filteredTickets.filter(t => t.openDate >= fromDate);
-                }
-                if (toDate) {
-                    filteredTickets = filteredTickets.filter(t => t.openDate <= toDate);
-                }
-            } else {
-    // Agents also see all tickets (just like admin)
-    if (status) {
-        filteredTickets = filteredTickets.filter(t => t.status === status);
+    if (agent) {
+        filteredTickets = filteredTickets.filter(t => t.agent === agent);
     }
 }
-            
-            if (status) {
-                filteredTickets = filteredTickets.filter(t => t.status === status);
-            }
-            
-            if (fromDate) {
-                filteredTickets = filteredTickets.filter(t => t.openDate >= fromDate);
-            }
-            
-            if (toDate) {
-                filteredTickets = filteredTickets.filter(t => t.openDate <= toDate);
-            }
+
+// فلترة عامة تنطبق على الكل (مدير أو موظف)
+if (status) {
+    filteredTickets = filteredTickets.filter(t => t.status === status);
+}
+if (fromDate) {
+    filteredTickets = filteredTickets.filter(t => t.openDate >= fromDate);
+}
+if (toDate) {
+    filteredTickets = filteredTickets.filter(t => t.openDate <= toDate);
+}
+
             
             loadTickets(filteredTickets);
         });
@@ -1185,7 +1176,8 @@ localStorage.setItem("tickets", JSON.stringify(tickets));
             };
             
             users.push(newUser);
-            
+            localStorage.setItem("users", JSON.stringify(users));
+
             // Reset form
             document.getElementById('newUsername').value = '';
             document.getElementById('newPassword').value = '';
@@ -1312,11 +1304,17 @@ function init() {
             tickets = JSON.parse(savedTickets);
         }
 
+        // ✅ استرجاع المستخدمين من التخزين
+        const savedUsers = localStorage.getItem("users");
+        if (savedUsers) {
+            users = JSON.parse(savedUsers);
+        }
+
         loadTickets();
         loadUsers();
     }
 
     // ✅ تحميل الترجمة حسب اللغة الحالية
     translatePage();
-} 
+}
    </script>
