@@ -1,48 +1,21 @@
 html, body {
-    height: 100%; /* ✅ يخلي الصفحة بطول الشاشة */
-    margin: 0;   /* ✅ يشيل أي مسافات فاضية */
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Arial", sans-serif;
-
-    /* ✅ خلفية الشعار */
-    background: url('21275f0b-5e60-4dc4-9587-dac9e78b198c.png') no-repeat center center fixed;
-    background-size: cover;
-    position: relative;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Arial", sans-serif;
 }
 
-/* ✅ طبقة شفافة فوق الخلفية */
-body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.7); /* أبيض شفاف */
-    z-index: -1; /* يخليه خلف المحتوى */
+body {
+  background: url('background.jpg') no-repeat center center fixed;
+  background-size: cover;
 }
 
-h1 {
-    font-size: 16px;
-    margin-top: 0;
-}
-
-p {
-    color: rgb(107, 114, 128);
-    font-size: 15px;
-    margin-bottom: 10px;
-    margin-top: 5px;
-}
-
+/* كرت بسيط عشان تشوف النص فوق الخلفية */
 .card {
-    max-width: 620px;
-    margin: 2rem auto; /* ✅ مسافة من فوق وتحت */
-    padding: 16px;
-    border: 1px solid lightgray;
-    border-radius: 16px;
-    background: white; /* ✅ يخلي الكرت أبيض فوق الخلفية */
-}
-
-.card p:last-child {
-    margin-bottom: 0;
+  max-width: 600px;
+  margin: 100px auto;
+  padding: 20px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  text-align: center;
 }
