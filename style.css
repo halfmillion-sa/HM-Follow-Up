@@ -9,3 +9,13 @@ body {
     background-size: cover;
     font-family: 'Tajawal', sans-serif;
 }
+
+/* لون مخصص بدل الأزرق */
+.bg-custom {
+    background-color: #7EC8B3; /* اللون اللي اخترته */
+    color: white;
+}
+
+.bg-custom:hover {
+    background-color: #6bb39f; /* درجة أغمق عند التمرير */
+}
