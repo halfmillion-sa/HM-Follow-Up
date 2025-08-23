@@ -1291,10 +1291,23 @@ localStorage.setItem("tickets", JSON.stringify(tickets));
 });
         // Initialize the app
 function init() {
-    // ✅ استرجاع المستخدم من التخزين إذا كان موجود
+    // ✅ استرجاع التذاكر من التخزين
+    const savedTickets = localStorage.getItem("tickets");
+    if (savedTickets) {
+        tickets = JSON.parse(savedTickets);
+    }
+
+    // ✅ استرجاع المستخدمين من التخزين
+    const savedUsers = localStorage.getItem("users");
+    if (savedUsers) {
+        users = JSON.parse(savedUsers);
+    }
+
+    // ✅ استرجاع المستخدم الحالي (علشان يظل مسجل حتى بعد تحديث الصفحة)
     const savedUser = localStorage.getItem("currentUser");
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
+
         document.getElementById('loginScreen').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
         document.getElementById('currentUserName').textContent = currentUser.username;
@@ -1304,24 +1317,14 @@ function init() {
         } else {
             document.querySelectorAll('.admin-only').forEach(el => el.classList.add('hidden'));
         }
-
-        // ✅ استرجاع التذاكر من التخزين
-        const savedTickets = localStorage.getItem("tickets");
-        if (savedTickets) {
-            tickets = JSON.parse(savedTickets);
-        }
-
-        // ✅ استرجاع المستخدمين من التخزين
-        const savedUsers = localStorage.getItem("users");
-        if (savedUsers) {
-            users = JSON.parse(savedUsers);
-        }
-
-        loadTickets();
-        loadUsers();
     }
 
-    // ✅ تحميل الترجمة حسب اللغة الحالية
+    // ✅ تحميل الجداول
+    loadTickets();
+    loadUsers();
+
+    // ✅ تحميل الترجمة
     translatePage();
 }
+
    </script>
