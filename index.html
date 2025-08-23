@@ -674,11 +674,18 @@ let tickets = [];
         loadUsers();
         translatePage(); // ✅ ترجمة حسب اللغة الحالية
 
-        document.getElementById('loginError').classList.add('hidden');
-    } else {
-        document.getElementById('loginError').classList.remove('hidden');
+        } else {
+        // ❌ إذا كان اسم المستخدم أو كلمة المرور غلط
+        const loginError = document.getElementById('loginError');
+        loginError.textContent = currentLang === 'ar' 
+            ? 'اسم المستخدم أو كلمة المرور غير صحيحة' 
+            : 'Invalid username or password';
+        loginError.classList.remove('hidden');
+
+        document.getElementById('password').value = ''; // 🟢 يمسح كلمة المرور
     }
 });
+
 
                 
                 // Set today's date and current time as default
