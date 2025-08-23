@@ -675,39 +675,39 @@
         let currentUser = null;
         // Login functionality
         document.getElementById('loginBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            // Find user
-            const user = users.find(u => u.username === username && u.password === password);
-            
-            if (user) {
-    currentUser = user;
-    localStorage.setItem("currentUser", JSON.stringify(user)); // ✅ نحفظ المستخدم
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
     
-    document.getElementById('loginScreen').classList.add('hidden');
-    document.getElementById('dashboard').classList.remove('hidden');
-                
-                // Set permissions based on role
-                if (user.role === 'admin') {
-                    // Show all admin features
-                    document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('hidden'));
-                    document.getElementById('manageTab').classList.remove('hidden');
-                    document.getElementById('exportBtn').classList.remove('hidden');
-                } else if (user.role === 'agent') {
-                    // Hide admin features for agents
-                    document.querySelectorAll('.admin-only').forEach(el => el.classList.add('hidden'));
-                    document.getElementById('manageTab').classList.add('hidden');
-                    document.getElementById('exportBtn').classList.add('hidden');
-                    
-                    // Show only create and search tabs
-                    document.getElementById('createTab').click();
-                }
-                
-                // Load tickets
-                loadTickets();
-                loadUsers();
+    const user = users.find(u => u.username === username && u.password === password);
+    
+    if (user) {
+        currentUser = user;
+        localStorage.setItem("currentUser", JSON.stringify(user)); // ✅ نحفظ المستخدم
+        
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
+        document.getElementById('currentUserName').textContent = user.username;
+
+        // صلاحيات
+        if (user.role === 'admin') {
+            document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('hidden'));
+        } else {
+            document.querySelectorAll('.admin-only').forEach(el => el.classList.add('hidden'));
+        }
+
+        // تحميل البيانات
+        loadTickets();
+        loadUsers();
+
+        // ✅ نترجم الصفحة
+        translatePage();
+
+        document.getElementById('loginError').classList.add('hidden');
+    } else {
+        document.getElementById('loginError').classList.remove('hidden');
+    }
+});
                 
                 // Set today's date and current time as default
                 const today = new Date();
@@ -726,15 +726,15 @@
         });
         // Logout functionality
         document.getElementById('logoutBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            currentUser = null;
-            document.getElementById('dashboard').classList.add('hidden');
-            document.getElementById('loginScreen').classList.remove('hidden');
-localStorage.removeItem("currentUser"); // ✅ نحذف بيانات المستخدم المحفوظة
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
+    e.preventDefault();
+    currentUser = null;
+    localStorage.removeItem("currentUser"); // ✅ نحذف المستخدم
 
-        });
+    document.getElementById('dashboard').classList.add('hidden');
+    document.getElementById('loginScreen').classList.remove('hidden');
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+});
         // User menu toggle
         document.getElementById('userMenuBtn').addEventListener('click', function() {
             document.getElementById('userMenu').classList.toggle('hidden');
@@ -1323,10 +1323,20 @@ function init() {
         document.getElementById('loginScreen').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
         document.getElementById('currentUserName').textContent = currentUser.username;
+
         if (currentUser.role === 'admin') {
             document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('hidden'));
+        } else {
+            document.querySelectorAll('.admin-only').forEach(el => el.classList.add('hidden'));
         }
+
+        loadTickets();
+        loadUsers();
     }
+
+    // ✅ تحميل اللغة من البداية
+    translatePage();
+}
 
     // ✅ استرجاع التذاكر من التخزين
     const savedTickets = localStorage.getItem("tickets");
