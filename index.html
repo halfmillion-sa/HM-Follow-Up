@@ -80,7 +80,7 @@
     <div id="searchSection" class="hidden">
       <h2 class="text-lg font-bold mb-4">قائمة التذاكر</h2>
       <div class="flex space-x-2 rtl:space-x-reverse mb-4">
-        <button id="exportBtn" class="bg-green-600 text-white px-3 py-1 rounded">تصدير</button>
+        <button id="exportBtn" class="bg-green-600 text-white px-3 py-1 rounded admin-only hidden">تصدير</button>
         <button id="importBtn" class="bg-purple-600 text-white px-3 py-1 rounded admin-only hidden">استيراد</button>
         <button id="deleteAllBtn" class="bg-red-600 text-white px-3 py-1 rounded admin-only hidden">حذف جميع</button>
       </div>
@@ -115,8 +115,8 @@
     ];
     let currentUser = null;
     let tickets = [
-      { id: 1, ticketNumber: "TKT-1001", accountName: "Ahmed", platform: "Instagram", status: "open" },
-      { id: 2, ticketNumber: "TKT-1002", accountName: "Mohammed", platform: "Email", status: "closed" }
+      { id: 1, ticketNumber: "TKT-1001", accountName: "Ahmed", platform: "Instagram", status: "open", agent:"Admin" },
+      { id: 2, ticketNumber: "TKT-1002", accountName: "Mohammed", platform: "Email", status: "closed", agent:"Agent1" }
     ];
 
     // تسجيل الدخول
@@ -154,6 +154,7 @@
         document.getElementById("exportBtn").classList.add("hidden");
         document.getElementById("importBtn").classList.add("hidden");
         document.getElementById("deleteAllBtn").classList.add("hidden");
+        document.getElementById("createTab").click();
       }
     }
 
@@ -180,7 +181,7 @@
       const ticketNumber = document.getElementById("ticketNumber").value;
       const accountName = document.getElementById("accountName").value;
       const platform = document.getElementById("platform").value;
-      tickets.push({ id: tickets.length+1, ticketNumber, accountName, platform, status:"open" });
+      tickets.push({ id: tickets.length+1, ticketNumber, accountName, platform, status:"open", agent: currentUser.username });
       this.reset();
       loadTickets();
       updateCounts();
@@ -191,7 +192,11 @@
     function loadTickets() {
       const tbody = document.getElementById("ticketsTableBody");
       tbody.innerHTML = "";
-      tickets.forEach((t,i) => {
+      let ticketsToShow = tickets;
+      if (currentUser.role === "agent") {
+        ticketsToShow = tickets.filter(t => t.agent === currentUser.username);
+      }
+      ticketsToShow.forEach((t,i) => {
         const row = document.createElement("tr");
         row.className = "ticket-row";
         row.innerHTML = `
