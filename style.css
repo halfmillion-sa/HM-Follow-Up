@@ -9,15 +9,3 @@ body {
     background-size: cover;
     font-family: 'Tajawal', sans-serif;
 }
-
-/* فلتر شفاف أبيض عشان النصوص والأزرار تبقى واضحة */
-body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255,255,255,0.7);
-    z-index: -1;
-}
