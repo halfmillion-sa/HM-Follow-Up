@@ -609,41 +609,8 @@
                 element.textContent = translations[currentLang][key] || key;
             });
         }
-        // Sample data for tickets
-        let tickets = [
-            {
-                id: 1,
-                ticketNumber: "TKT-1001",
-                accountName: "Ahmed Ali",
-                platform: "Instagram",
-                openDate: "2023-06-15",
-                openTime: "10:30",
-                closeTime: "",
-                phoneNumber: "0555123456",
-                reminder6h: false,
-                reminder24h: false,
-                reminder48h: false,
-                closeReason: "",
-                status: "open",
-                agent: "Abdullah"
-            },
-            {
-                id: 2,
-                ticketNumber: "TKT-1002",
-                accountName: "Mohammed Saleh",
-                platform: "Email",
-                openDate: "2023-06-14",
-                openTime: "14:15",
-                closeTime: "2023-06-15 09:45",
-                phoneNumber: "0501234567",
-                reminder6h: true,
-                reminder24h: false,
-                reminder48h: false,
-                closeReason: "after_6h",
-                status: "closed",
-                agent: "Abdullah"
-            }
-        ];
+        // Shared tickets list (start empty, load from localStorage)
+let tickets = [];
         // Sample data for users
         let users = [
             {
@@ -676,15 +643,16 @@
         // Login functionality
         document.getElementById('loginBtn').addEventListener('click', function(e) {
     e.preventDefault();
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
     
     const user = users.find(u => u.username === username && u.password === password);
     
     if (user) {
         currentUser = user;
-        localStorage.setItem("currentUser", JSON.stringify(user)); // ✅ نحفظ المستخدم
+        localStorage.setItem("currentUser", JSON.stringify(user)); // ✅ نحفظ بيانات المستخدم
         
+        // نخفي شاشة الدخول ونظهر لوحة التحكم
         document.getElementById('loginScreen').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
         document.getElementById('currentUserName').textContent = user.username;
@@ -696,12 +664,9 @@
             document.querySelectorAll('.admin-only').forEach(el => el.classList.add('hidden'));
         }
 
-        // تحميل البيانات
         loadTickets();
         loadUsers();
-
-        // ✅ نترجم الصفحة
-        translatePage();
+        translatePage(); // ✅ ترجمة حسب اللغة الحالية
 
         document.getElementById('loginError').classList.add('hidden');
     } else {
@@ -717,18 +682,13 @@
                 const hours = now.getHours().toString().padStart(2, '0');
                 const minutes = now.getMinutes().toString().padStart(2, '0');
                 document.getElementById('openTime').value = `${hours}:${minutes}`;
-                
-                // Hide login error if shown
-                document.getElementById('loginError').classList.add('hidden');
-            } else {
-                document.getElementById('loginError').classList.remove('hidden');
-            }
-        });
+                           }
+        
         // Logout functionality
         document.getElementById('logoutBtn').addEventListener('click', function(e) {
     e.preventDefault();
     currentUser = null;
-    localStorage.removeItem("currentUser"); // ✅ نحذف المستخدم
+    localStorage.removeItem("currentUser"); // ✅ نحذف المستخدم من التخزين
 
     document.getElementById('dashboard').classList.add('hidden');
     document.getElementById('loginScreen').classList.remove('hidden');
@@ -825,7 +785,8 @@
             };
             
             tickets.push(newTicket);
-            
+            localStorage.setItem("tickets", JSON.stringify(tickets));
+
             // Reset form
             this.reset();
             
@@ -1058,6 +1019,8 @@
                 
                 tickets[ticketIndex].closeTime = closeTime;
                 tickets[ticketIndex].status = 'closed';
+localStorage.setItem("tickets", JSON.stringify(tickets));
+
                 tickets[ticketIndex].closeReason = document.getElementById('closeReason').value;
                 tickets[ticketIndex].reminder6h = document.getElementById('reminder6h').checked;
                 tickets[ticketIndex].reminder24h = document.getElementById('reminder24h').checked;
@@ -1111,13 +1074,11 @@
                     filteredTickets = filteredTickets.filter(t => t.openDate <= toDate);
                 }
             } else {
-                // Agents can only see their own tickets
-                filteredTickets = filteredTickets.filter(t => t.agent === currentUser.username);
-                
-                if (status) {
-                    filteredTickets = filteredTickets.filter(t => t.status === status);
-                }
-            }
+    // Agents also see all tickets (just like admin)
+    if (status) {
+        filteredTickets = filteredTickets.filter(t => t.status === status);
+    }
+}
             
             if (status) {
                 filteredTickets = filteredTickets.filter(t => t.status === status);
@@ -1251,32 +1212,36 @@
                     const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
                     const jsonData = XLSX.utils.sheet_to_json(firstSheet);
                     
-                    jsonData.forEach(item => {
-                        if (!tickets.some(t => t.ticketNumber === item['Ticket Number'])) {
-                            tickets.push({
-                                id: tickets.length > 0 ? Math.max(...tickets.map(t => t.id)) + 1 : 1,
-                                ticketNumber: item['Ticket Number'] || '',
-                                accountName: item['Account Name'] || '',
-                                platform: item['Platform'] || 'Email',
-                                openDate: item['Open Date'] || new Date().toISOString().split('T')[0],
-                                openTime: item['Open Time'] || '00:00',
-                                closeTime: item['Close Time'] || '',
-                                phoneNumber: item['Phone Number'] || '',
-                                reminder6h: item['6h Reminder'] === 'Yes',
-                                reminder24h: item['24h Reminder'] === 'Yes',
-                                reminder48h: item['48h Reminder'] === 'Yes',
-                                closeReason: item['Close Reason'] || '',
-                                status: item['Status'] === 'Closed' ? 'closed' : 'open',
-                                agent: item['Agent'] || currentUser.username,
-                                createdBy: currentUser.username,
-                                createdAt: new Date().toISOString()
-                            });
-                        }
-                    });
-                    
-                    loadTickets();
-                    updateTicketCounts();
-                    alert(currentLang === 'ar' ? 'تم استيراد التذاكر بنجاح' : 'Tickets imported successfully');
+                   jsonData.forEach(item => {
+    if (!tickets.some(t => t.ticketNumber === item['Ticket Number'])) {
+        tickets.push({
+            id: tickets.length > 0 ? Math.max(...tickets.map(t => t.id)) + 1 : 1,
+            ticketNumber: item['Ticket Number'] || '',
+            accountName: item['Account Name'] || '',
+            platform: item['Platform'] || 'Email',
+            openDate: item['Open Date'] || new Date().toISOString().split('T')[0],
+            openTime: item['Open Time'] || '00:00',
+            closeTime: item['Close Time'] || '',
+            phoneNumber: item['Phone Number'] || '',
+            reminder6h: item['6h Reminder'] === 'Yes',
+            reminder24h: item['24h Reminder'] === 'Yes',
+            reminder48h: item['48h Reminder'] === 'Yes',
+            closeReason: item['Close Reason'] || '',
+            status: item['Status'] === 'Closed' ? 'closed' : 'open',
+            agent: item['Agent'] || currentUser.username,
+            createdBy: currentUser.username,
+            createdAt: new Date().toISOString()
+        });
+    }
+});
+
+// ✅ نحفظ التذاكر بعد الاستيراد
+localStorage.setItem("tickets", JSON.stringify(tickets));
+
+loadTickets();
+updateTicketCounts();
+alert(currentLang === 'ar' ? 'تم استيراد التذاكر بنجاح' : 'Tickets imported successfully');
+
                 };
                 
                 reader.readAsArrayBuffer(file);
@@ -1289,6 +1254,8 @@ function deleteAllTickets() {
     if (currentUser && currentUser.role === 'admin') {
         if (confirm(currentLang === 'ar' ? 'هل تريد حذف جميع التذاكر؟' : 'Are you sure you want to delete all tickets?')) {
             tickets = [];
+localStorage.setItem("tickets", JSON.stringify(tickets));
+
             loadTickets();
             updateTicketCounts();
             alert(currentLang === 'ar' ? 'تم حذف جميع التذاكر' : 'All tickets deleted');
@@ -1305,6 +1272,8 @@ document.addEventListener('click', function(e) {
         if (currentUser && currentUser.role === 'admin') {
             if (confirm(currentLang === 'ar' ? 'هل تريد حذف هذه التذكرة؟' : 'Are you sure you want to delete this ticket?')) {
                 tickets = tickets.filter(t => t.id !== id);
+localStorage.setItem("tickets", JSON.stringify(tickets));
+
                 loadTickets();
                 updateTicketCounts();
                 alert(currentLang === 'ar' ? 'تم حذف التذكرة' : 'Ticket deleted');
@@ -1316,7 +1285,7 @@ document.addEventListener('click', function(e) {
 });
         // Initialize the app
 function init() {
-    // ✅ استرجاع المستخدم من التخزين
+    // ✅ استرجاع المستخدم من التخزين إذا كان موجود
     const savedUser = localStorage.getItem("currentUser");
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
@@ -1330,34 +1299,17 @@ function init() {
             document.querySelectorAll('.admin-only').forEach(el => el.classList.add('hidden'));
         }
 
+        // ✅ استرجاع التذاكر من التخزين
+        const savedTickets = localStorage.getItem("tickets");
+        if (savedTickets) {
+            tickets = JSON.parse(savedTickets);
+        }
+
         loadTickets();
         loadUsers();
     }
 
-    // ✅ تحميل اللغة من البداية
+    // ✅ تحميل الترجمة حسب اللغة الحالية
     translatePage();
-}
-
-    // ✅ استرجاع التذاكر من التخزين
-    const savedTickets = localStorage.getItem("tickets");
-    if (savedTickets) {
-        tickets = JSON.parse(savedTickets);
-    }
-        function init() {
-            // Set today's date and current time as default
-            const today = new Date();
-            document.getElementById('openDate').valueAsDate = today;
-            
-            const now = new Date();
-            const hours = now.getHours().toString().padStart(2, '0');
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            document.getElementById('openTime').value = `${hours}:${minutes}`;
-            
-            // Set default language to Arabic
-            translatePage();
-            
-
-        }
-        // Run initialization when DOM is loaded
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
+} 
+   </script>
