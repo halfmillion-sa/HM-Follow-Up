@@ -15,104 +15,228 @@
 </head>
 <body class="bg-gray-100">
 
-  <!-- Search Tickets Section -->
-  <div id="searchTicketSection" class="bg-white shadow rounded-lg p-6 mb-8">
-    <h2 class="text-lg font-medium text-gray-900 mb-6">بحث عن التذاكر</h2>
-
-    <div class="flex space-x-4 rtl:space-x-reverse">
-      <button id="searchBtn" class="px-4 py-2 bg-blue-600 text-white rounded">بحث</button>
-      <button id="resetSearchBtn" class="px-4 py-2 bg-gray-400 text-white rounded">إعادة تعيين</button>
-      <button id="exportBtn" class="px-4 py-2 bg-green-600 text-white rounded admin-only hidden">تصدير</button>
-      <button id="deleteAllBtn" class="px-4 py-2 bg-red-600 text-white rounded admin-only hidden">
-        <i class="fas fa-trash mr-2"></i> حذف جميع التذاكر
-      </button>
-    </div>
-
-    <div class="mt-6 overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-6 py-3">#</th>
-            <th class="px-6 py-3">رقم التذكرة</th>
-            <th class="px-6 py-3">اسم الحساب</th>
-            <th class="px-6 py-3">المنصة</th>
-            <th class="px-6 py-3">الحالة</th>
-            <th class="px-6 py-3">إجراءات</th>
-          </tr>
-        </thead>
-        <tbody id="ticketsTableBody" class="bg-white divide-y divide-gray-200">
-        </tbody>
-      </table>
+  <!-- Login Screen -->
+  <div id="loginScreen" class="min-h-screen flex items-center justify-center">
+    <div class="bg-white p-6 rounded shadow w-96">
+      <h2 class="text-xl font-bold mb-4">تسجيل الدخول</h2>
+      <input id="username" class="w-full mb-3 p-2 border rounded" placeholder="اسم المستخدم">
+      <input id="password" type="password" class="w-full mb-3 p-2 border rounded" placeholder="كلمة المرور">
+      <button id="loginBtn" class="w-full bg-blue-600 text-white p-2 rounded">دخول</button>
+      <div id="loginError" class="text-red-600 text-center mt-2 hidden">بيانات الدخول غير صحيحة</div>
     </div>
   </div>
 
+  <!-- Dashboard -->
+  <div id="dashboard" class="hidden p-6">
+
+    <!-- Header -->
+    <header class="flex justify-between mb-6">
+      <h1 class="text-2xl font-bold">نظام متابعة التذاكر</h1>
+      <div>
+        <span id="currentUserName" class="mr-3"></span>
+        <button id="logoutBtn" class="bg-gray-600 text-white px-3 py-1 rounded">خروج</button>
+      </div>
+    </header>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div class="bg-white p-4 rounded shadow">
+        <h3 class="text-sm text-gray-500">إجمالي التذاكر</h3>
+        <p id="totalTickets" class="text-2xl font-bold">0</p>
+      </div>
+      <div class="bg-white p-4 rounded shadow">
+        <h3 class="text-sm text-gray-500">التذاكر المغلقة</h3>
+        <p id="closedTickets" class="text-2xl font-bold">0</p>
+      </div>
+      <div class="bg-white p-4 rounded shadow">
+        <h3 class="text-sm text-gray-500">التذاكر المفتوحة</h3>
+        <p id="openTickets" class="text-2xl font-bold">0</p>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <nav class="flex space-x-4 rtl:space-x-reverse border-b mb-6">
+      <button id="createTab" class="py-2 px-4 border-b-2 border-blue-600">إضافة تذكرة</button>
+      <button id="searchTab" class="py-2 px-4">بحث التذاكر</button>
+      <button id="manageTab" class="py-2 px-4 admin-only hidden">إدارة المستخدمين</button>
+    </nav>
+
+    <!-- Create Ticket -->
+    <div id="createSection">
+      <h2 class="text-lg font-bold mb-4">إضافة تذكرة جديدة</h2>
+      <form id="ticketForm" class="space-y-3">
+        <input id="ticketNumber" class="w-full p-2 border rounded" placeholder="رقم التذكرة">
+        <input id="accountName" class="w-full p-2 border rounded" placeholder="اسم الحساب">
+        <select id="platform" class="w-full p-2 border rounded">
+          <option value="Instagram">Instagram</option>
+          <option value="Email">Email</option>
+          <option value="Phone">Phone</option>
+        </select>
+        <button class="bg-blue-600 text-white px-4 py-2 rounded">إضافة</button>
+      </form>
+    </div>
+
+    <!-- Search Tickets -->
+    <div id="searchSection" class="hidden">
+      <h2 class="text-lg font-bold mb-4">قائمة التذاكر</h2>
+      <div class="flex space-x-2 rtl:space-x-reverse mb-4">
+        <button id="exportBtn" class="bg-green-600 text-white px-3 py-1 rounded">تصدير</button>
+        <button id="importBtn" class="bg-purple-600 text-white px-3 py-1 rounded admin-only hidden">استيراد</button>
+        <button id="deleteAllBtn" class="bg-red-600 text-white px-3 py-1 rounded admin-only hidden">حذف جميع</button>
+      </div>
+      <table class="w-full border">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="p-2">#</th>
+            <th class="p-2">رقم التذكرة</th>
+            <th class="p-2">اسم الحساب</th>
+            <th class="p-2">المنصة</th>
+            <th class="p-2">الحالة</th>
+            <th class="p-2">إجراء</th>
+          </tr>
+        </thead>
+        <tbody id="ticketsTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Manage Users -->
+    <div id="manageSection" class="hidden">
+      <h2 class="text-lg font-bold mb-4">إدارة المستخدمين</h2>
+      <p>محتوى إدارة المستخدمين هنا...</p>
+    </div>
+
+  </div>
+
   <script>
-    // بيانات مبدئية
-    let currentUser = { username: "Abdullah", role: "admin" }; // جرّب "agent"
+    // بيانات تجريبية
+    let users = [
+      { username: "Admin", password: "123", role: "admin" },
+      { username: "Agent1", password: "123", role: "agent" }
+    ];
+    let currentUser = null;
     let tickets = [
-      { id: 1, ticketNumber: "TKT-1001", accountName: "Ahmed Ali", platform: "Instagram", status: "open" },
+      { id: 1, ticketNumber: "TKT-1001", accountName: "Ahmed", platform: "Instagram", status: "open" },
       { id: 2, ticketNumber: "TKT-1002", accountName: "Mohammed", platform: "Email", status: "closed" }
     ];
+
+    // تسجيل الدخول
+    document.getElementById("loginBtn").addEventListener("click", function() {
+      const u = document.getElementById("username").value;
+      const p = document.getElementById("password").value;
+      const user = users.find(x => x.username === u && x.password === p);
+      if (user) {
+        currentUser = user;
+        document.getElementById("loginScreen").classList.add("hidden");
+        document.getElementById("dashboard").classList.remove("hidden");
+        document.getElementById("currentUserName").textContent = user.username;
+        applyPermissions();
+        loadTickets();
+        updateCounts();
+      } else {
+        document.getElementById("loginError").classList.remove("hidden");
+      }
+    });
+
+    // خروج
+    document.getElementById("logoutBtn").addEventListener("click", function() {
+      currentUser = null;
+      document.getElementById("dashboard").classList.add("hidden");
+      document.getElementById("loginScreen").classList.remove("hidden");
+    });
+
+    // صلاحيات
+    function applyPermissions() {
+      if (currentUser.role === "admin") {
+        document.querySelectorAll(".admin-only").forEach(el => el.classList.remove("hidden"));
+      } else {
+        document.querySelectorAll(".admin-only").forEach(el => el.classList.add("hidden"));
+        document.getElementById("manageTab").classList.add("hidden");
+        document.getElementById("exportBtn").classList.add("hidden");
+        document.getElementById("importBtn").classList.add("hidden");
+        document.getElementById("deleteAllBtn").classList.add("hidden");
+      }
+    }
+
+    // التبويبات
+    document.getElementById("createTab").addEventListener("click", function() {
+      document.getElementById("createSection").classList.remove("hidden");
+      document.getElementById("searchSection").classList.add("hidden");
+      document.getElementById("manageSection").classList.add("hidden");
+    });
+    document.getElementById("searchTab").addEventListener("click", function() {
+      document.getElementById("createSection").classList.add("hidden");
+      document.getElementById("searchSection").classList.remove("hidden");
+      document.getElementById("manageSection").classList.add("hidden");
+    });
+    document.getElementById("manageTab").addEventListener("click", function() {
+      document.getElementById("createSection").classList.add("hidden");
+      document.getElementById("searchSection").classList.add("hidden");
+      document.getElementById("manageSection").classList.remove("hidden");
+    });
+
+    // إضافة تذكرة
+    document.getElementById("ticketForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const ticketNumber = document.getElementById("ticketNumber").value;
+      const accountName = document.getElementById("accountName").value;
+      const platform = document.getElementById("platform").value;
+      tickets.push({ id: tickets.length+1, ticketNumber, accountName, platform, status:"open" });
+      this.reset();
+      loadTickets();
+      updateCounts();
+      alert("تمت إضافة التذكرة");
+    });
 
     // تحميل التذاكر
     function loadTickets() {
       const tbody = document.getElementById("ticketsTableBody");
       tbody.innerHTML = "";
-      tickets.forEach((t, i) => {
+      tickets.forEach((t,i) => {
         const row = document.createElement("tr");
         row.className = "ticket-row";
         row.innerHTML = `
-          <td class="px-6 py-4">${i + 1}</td>
-          <td class="px-6 py-4">${t.ticketNumber}</td>
-          <td class="px-6 py-4">${t.accountName}</td>
-          <td class="px-6 py-4">${t.platform}</td>
-          <td class="px-6 py-4">${t.status === "open" ? "مفتوحة" : "مغلقة"}</td>
-          <td class="px-6 py-4">
-            ${currentUser.role === "admin" ? 
-              `<button class="text-red-600 delete-ticket-btn" data-id="${t.id}">
-                <i class="fas fa-trash"></i> حذف
-              </button>` : ""}
+          <td class="p-2">${i+1}</td>
+          <td class="p-2">${t.ticketNumber}</td>
+          <td class="p-2">${t.accountName}</td>
+          <td class="p-2">${t.platform}</td>
+          <td class="p-2">${t.status==="open"?"مفتوحة":"مغلقة"}</td>
+          <td class="p-2">
+            ${currentUser.role==="admin"?`<button class="text-red-600 delete-ticket-btn" data-id="${t.id}">حذف</button>`:""}
           </td>
         `;
         tbody.appendChild(row);
       });
     }
 
-    // زر حذف جميع التذاكر
-    document.getElementById("deleteAllBtn").addEventListener("click", function () {
-      if (currentUser.role !== "admin") return;
-      if (confirm("هل أنت متأكد من حذف جميع التذاكر؟")) {
-        tickets = [];
-        loadTickets();
-        alert("تم حذف جميع التذاكر");
-      }
-    });
+    // تحديث الإحصائيات
+    function updateCounts() {
+      const total = tickets.length;
+      const closed = tickets.filter(t=>t.status==="closed").length;
+      const open = total-closed;
+      document.getElementById("totalTickets").textContent = total;
+      document.getElementById("closedTickets").textContent = closed;
+      document.getElementById("openTickets").textContent = open;
+    }
 
-    // زر حذف تذكرة واحدة
-    document.addEventListener("click", function (e) {
-      if (e.target.closest(".delete-ticket-btn")) {
-        const ticketId = parseInt(e.target.closest(".delete-ticket-btn").getAttribute("data-id"));
-        if (confirm("هل أنت متأكد من حذف هذه التذكرة؟")) {
-          tickets = tickets.filter(t => t.id !== ticketId);
+    // حذف تذكرة
+    document.addEventListener("click", function(e){
+      if(e.target.closest(".delete-ticket-btn")){
+        const id = parseInt(e.target.getAttribute("data-id"));
+        if(confirm("هل أنت متأكد من الحذف؟")){
+          tickets = tickets.filter(t=>t.id!==id);
           loadTickets();
-          alert("تم حذف التذكرة");
+          updateCounts();
         }
       }
     });
 
-    // إظهار الأزرار الخاصة بالأدمن
-    function applyPermissions() {
-      if (currentUser.role === "admin") {
-        document.querySelectorAll(".admin-only").forEach(el => el.classList.remove("hidden"));
-      } else {
-        document.querySelectorAll(".admin-only").forEach(el => el.classList.add("hidden"));
+    // حذف جميع التذاكر
+    document.getElementById("deleteAllBtn").addEventListener("click", function(){
+      if(confirm("حذف جميع التذاكر؟")){
+        tickets = [];
+        loadTickets();
+        updateCounts();
       }
-    }
-
-    // تشغيل عند التحميل
-    document.addEventListener("DOMContentLoaded", function () {
-      applyPermissions();
-      loadTickets();
     });
   </script>
 </body>
