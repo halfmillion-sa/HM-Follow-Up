@@ -132,6 +132,7 @@
         applyPermissions();
         loadTickets();
         updateCounts();
+        document.getElementById("loginError").classList.add("hidden");
       } else {
         document.getElementById("loginError").classList.remove("hidden");
       }
@@ -168,6 +169,7 @@
       document.getElementById("createSection").classList.add("hidden");
       document.getElementById("searchSection").classList.remove("hidden");
       document.getElementById("manageSection").classList.add("hidden");
+      loadTickets();
     });
     document.getElementById("manageTab").addEventListener("click", function() {
       document.getElementById("createSection").classList.add("hidden");
@@ -189,12 +191,12 @@
     });
 
     // تحميل التذاكر
-    function loadTickets() {
+    function loadTickets(filteredTickets = null) {
       const tbody = document.getElementById("ticketsTableBody");
       tbody.innerHTML = "";
-      let ticketsToShow = tickets;
+      let ticketsToShow = filteredTickets || tickets;
       if (currentUser.role === "agent") {
-        ticketsToShow = tickets.filter(t => t.agent === currentUser.username);
+        ticketsToShow = ticketsToShow.filter(t => t.agent === currentUser.username);
       }
       ticketsToShow.forEach((t,i) => {
         const row = document.createElement("tr");
@@ -211,6 +213,7 @@
         `;
         tbody.appendChild(row);
       });
+      updateCounts();
     }
 
     // تحديث الإحصائيات
