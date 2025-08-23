@@ -604,11 +604,12 @@
         });
         // Translate the page
         function translatePage() {
-            document.querySelectorAll('[data-i18n]').forEach(element => {
-                const key = element.getAttribute('data-i18n');
-                element.textContent = translations[currentLang][key] || key;
-            });
-        }
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        element.innerHTML = translations[currentLang][key] || key; // ✅ يحافظ على الأيقونات
+    });
+}
+
         // Shared tickets list (start empty, load from localStorage)
 let tickets = [];
         // Sample data for users
@@ -650,14 +651,19 @@ let tickets = [];
     
     if (user) {
         currentUser = user;
-        localStorage.setItem("currentUser", JSON.stringify(user)); // ✅ نحفظ بيانات المستخدم
+
+        // ✅ تحديث آخر تسجيل دخول
+        user.lastLogin = new Date().toISOString().split('T')[0];
+
+        // ✅ نحفظ بيانات المستخدم
+        localStorage.setItem("currentUser", JSON.stringify(user));
         
         // نخفي شاشة الدخول ونظهر لوحة التحكم
         document.getElementById('loginScreen').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
         document.getElementById('currentUserName').textContent = user.username;
 
-        // صلاحيات
+        // ✅ صلاحيات
         if (user.role === 'admin') {
             document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('hidden'));
         } else {
@@ -673,6 +679,7 @@ let tickets = [];
         document.getElementById('loginError').classList.remove('hidden');
     }
 });
+
                 
                 // Set today's date and current time as default
                 const today = new Date();
@@ -682,7 +689,7 @@ let tickets = [];
                 const hours = now.getHours().toString().padStart(2, '0');
                 const minutes = now.getMinutes().toString().padStart(2, '0');
                 document.getElementById('openTime').value = `${hours}:${minutes}`;
-                           }
+                           
         
         // Logout functionality
         document.getElementById('logoutBtn').addEventListener('click', function(e) {
