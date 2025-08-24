@@ -239,46 +239,50 @@
             </div>
 
             <!-- Search Tickets Section -->
-            <div id="searchTicketSection" class="hidden bg-white shadow rounded-lg p-6 mb-8">
-                <h2 class="text-lg font-medium text-gray-900 mb-6" data-i18n="search_tickets">بحث عن التذاكر</h2>
-                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 mb-6">
-                    <div>
-                        <label for="searchTicketNumber" class="block text-sm font-medium text-gray-700" data-i18n="ticket_number">رقم التذكرة</label>
-                        <input type="text" id="searchTicketNumber" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label for="searchAccountName" class="block text-sm font-medium text-gray-700" data-i18n="account_name">اسم الحساب</label>
-                        <input type="text" id="searchAccountName" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label for="searchPhoneNumber" class="block text-sm font-medium text-gray-700" data-i18n="phone_number">رقم الجوال</label>
-                        <input type="text" id="searchPhoneNumber" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 mb-6 admin-only hidden">
-                    <div>
-                        <label for="searchAgent" class="block text-sm font-medium text-gray-700" data-i18n="agent">الموظف</label>
-                        <select id="searchAgent" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                            <option value="">الكل</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="searchStatus" class="block text-sm font-medium text-gray-700" data-i18n="status">الحالة</label>
-                        <select id="searchStatus" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                            <option value="">الكل</option>
-                            <option value="open" data-i18n="open">مفتوحة</option>
-                            <option value="closed" data-i18n="closed">مغلقة</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="searchFromDate" class="block text-sm font-medium text-gray-700" data-i18n="from_date">من تاريخ</label>
-                        <input type="date" id="searchFromDate" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label for="searchToDate" class="block text-sm font-medium text-gray-700" data-i18n="to_date">إلى تاريخ</label>
-                        <input type="date" id="searchToDate" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                </div>
+           <div id="searchTicketSection" class="hidden bg-white shadow rounded-lg p-6 mb-8">
+    <h2 class="text-lg font-medium text-gray-900 mb-6" data-i18n="search_tickets">بحث عن التذاكر</h2>
+
+    <!-- ✅ الحقول الأساسية متاحة للجميع -->
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 mb-6">
+        <div>
+            <label for="searchTicketNumber" class="block text-sm font-medium text-gray-700" data-i18n="ticket_number">رقم التذكرة</label>
+            <input type="text" id="searchTicketNumber" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        <div>
+            <label for="searchAccountName" class="block text-sm font-medium text-gray-700" data-i18n="account_name">اسم الحساب</label>
+            <input type="text" id="searchAccountName" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        <div>
+            <label for="searchPhoneNumber" class="block text-sm font-medium text-gray-700" data-i18n="phone_number">رقم الجوال</label>
+            <input type="text" id="searchPhoneNumber" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        <div>
+            <label for="searchStatus" class="block text-sm font-medium text-gray-700" data-i18n="status">الحالة</label>
+            <select id="searchStatus" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                <option value="">الكل</option>
+                <option value="open" data-i18n="open">مفتوحة</option>
+                <option value="closed" data-i18n="closed">مغلقة</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- ✅ الحقول المتقدمة للمدير فقط -->
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 mb-6 admin-only hidden">
+        <div>
+            <label for="searchAgent" class="block text-sm font-medium text-gray-700" data-i18n="agent">الموظف</label>
+            <select id="searchAgent" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                <option value="">الكل</option>
+            </select>
+        </div>
+        <div>
+            <label for="searchFromDate" class="block text-sm font-medium text-gray-700" data-i18n="from_date">من تاريخ</label>
+            <input type="date" id="searchFromDate" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        <div>
+            <label for="searchToDate" class="block text-sm font-medium text-gray-700" data-i18n="to_date">إلى تاريخ</label>
+            <input type="date" id="searchToDate" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+        </div>
+    </div>
                 <div class="flex space-x-4 rtl:space-x-reverse">
                     <button id="searchBtn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         <i class="fas fa-search mr-2"></i>
