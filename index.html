@@ -788,13 +788,27 @@ if (!localStorage.getItem("tickets")) {
             const openTime = document.getElementById('openTime').value;
             const phoneNumber = document.getElementById('phoneNumber').value;
             
-            // Check if ticket number already exists
-            if (tickets.some(t => t.ticketNumber === ticketNumber)) {
-                document.getElementById('ticketNumberError').classList.remove('hidden');
-                return;
-            } else {
-                document.getElementById('ticketNumberError').classList.add('hidden');
-            }
+            // ✅ تحقق من رقم التذكرة (ممنوع التكرار نهائياً)
+if (tickets.some(t => t.ticketNumber === ticketNumber)) {
+    document.getElementById('ticketNumberError').classList.remove('hidden');
+    return;
+} else {
+    document.getElementById('ticketNumberError').classList.add('hidden');
+}
+
+// ✅ تنبيه فقط إذا رقم الجوال مكرر
+if (phoneNumber && tickets.some(t => t.phoneNumber === phoneNumber)) {
+    alert(currentLang === 'ar' 
+        ? 'تنبيه: رقم الجوال هذا مستخدم في تذكرة سابقة' 
+        : 'Warning: This phone number has been used in a previous ticket');
+}
+
+// ✅ تنبيه فقط إذا الحساب مكرر
+if (accountName && tickets.some(t => t.accountName === accountName)) {
+    alert(currentLang === 'ar' 
+        ? 'تنبيه: اسم الحساب هذا مستخدم في تذكرة سابقة' 
+        : 'Warning: This account name has been used in a previous ticket');
+}
             
             // Create new ticket
             const newTicket = {
