@@ -130,63 +130,58 @@
         <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
             <!-- Stats Cards -->
             <div class="grid grid-cols-1 gap-5 sm:grid-cols-3 mb-8">
-    <!-- إجمالي التذاكر -->
-    <div class="bg-white overflow-hidden shadow rounded-lg">
-        <div class="px-4 py-5 sm:p-6">
-            <div class="flex items-center">
-                <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
-                    <i class="fas fa-ticket-alt text-white text-xl"></i>
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="px-4 py-5 sm:p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                                <i class="fas fa-ticket-alt text-white text-xl"></i>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dl>
+                                    <dt class="text-sm font-medium text-gray-500 truncate" data-i18n="total_tickets">إجمالي التذاكر</dt>
+                                    <dd class="flex items-baseline">
+                                        <div class="text-2xl font-semibold text-gray-900" id="totalTickets">0</div>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="ml-4 w-0 flex-1"> <!-- ← هنا ضبطت المسافة -->
-                    <dl>
-                        <dt class="text-sm font-medium text-gray-500 truncate">إجمالي التذاكر</dt>
-                        <dd class="flex items-baseline">
-                            <div class="text-2xl font-semibold text-gray-900" id="totalTickets">3</div>
-                        </dd>
-                    </dl>
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="px-4 py-5 sm:p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+                                <i class="fas fa-check-circle text-white text-xl"></i>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dl>
+                                    <dt class="text-sm font-medium text-gray-500 truncate" data-i18n="closed_tickets">التذاكر المغلقة</dt>
+                                    <dd class="flex items-baseline">
+                                        <div class="text-2xl font-semibold text-gray-900" id="closedTickets">0</div>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- التذاكر المغلقة -->
-    <div class="bg-white overflow-hidden shadow rounded-lg">
-        <div class="px-4 py-5 sm:p-6">
-            <div class="flex items-center">
-                <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
-                    <i class="fas fa-check-circle text-white text-xl"></i>
-                </div>
-                <div class="ml-4 w-0 flex-1">
-                    <dl>
-                        <dt class="text-sm font-medium text-gray-500 truncate">التذاكر المغلقة</dt>
-                        <dd class="flex items-baseline">
-                            <div class="text-2xl font-semibold text-gray-900" id="closedTickets">0</div>
-                        </dd>
-                    </dl>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- التذاكر المفتوحة -->
-    <div class="bg-white overflow-hidden shadow rounded-lg">
-        <div class="px-4 py-5 sm:p-6">
-            <div class="flex items-center">
-                <div class="flex-shrink-0 bg-red-500 rounded-md p-3">
-                    <i class="fas fa-exclamation-circle text-white text-xl"></i>
-                </div>
-                <div class="ml-4 w-0 flex-1">
-                    <dl>
-                        <dt class="text-sm font-medium text-gray-500 truncate">التذاكر المفتوحة</dt>
-                        <dd class="flex items-baseline">
-                            <div class="text-2xl font-semibold text-gray-900" id="openTickets">3</div>
-                        </dd>
-                    </dl>
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="px-4 py-5 sm:p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 bg-red-500 rounded-md p-3">
+                                <i class="fas fa-exclamation-circle text-white text-xl"></i>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dl>
+                                    <dt class="text-sm font-medium text-gray-500 truncate" data-i18n="open_tickets">التذاكر المفتوحة</dt>
+                                    <dd class="flex items-baseline">
+                                        <div class="text-2xl font-semibold text-gray-900" id="openTickets">0</div>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
 
             <!-- Tabs -->
             <div class="border-b border-gray-200 mb-6">
