@@ -778,18 +778,26 @@ if (!localStorage.getItem("tickets")) {
             document.getElementById('searchTab').classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
         });
         // Add new ticket
-        document.getElementById('ticketForm').addEventListener('submit', function(e) {
+document.getElementById('ticketForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
-    const ticketNumber = document.getElementById('ticketNumber').value;
-    const accountName = document.getElementById('accountName').value;
-    const platform = document.getElementById('platform').value;
-    const openDate = document.getElementById('openDate').value;
-    const openTime = document.getElementById('openTime').value;
-    const phoneNumber = document.getElementById('phoneNumber').value;
+    const ticketNumber = document.getElementById('ticketNumber').value.trim();
+    const accountName  = document.getElementById('accountName').value.trim();
+    const platform     = document.getElementById('platform').value;
+    const openDate     = document.getElementById('openDate').value;
+    const openTime     = document.getElementById('openTime').value;
+    const phoneNumber  = document.getElementById('phoneNumber').value.trim();
+
+    // ✅ التحقق الأساسي: لازم على الأقل يكون فيه رقم تذكرة أو جوال
+    if (!ticketNumber && !phoneNumber) {
+        alert(currentLang === 'ar' 
+            ? 'الرجاء إدخال رقم التذكرة أو رقم الجوال' 
+            : 'Please enter either a Ticket Number or a Phone Number');
+        return;
+    }
 
     // ✅ تحقق من رقم التذكرة (ممنوع التكرار نهائياً)
-    if (tickets.some(t => t.ticketNumber === ticketNumber)) {
+    if (ticketNumber && tickets.some(t => t.ticketNumber === ticketNumber)) {
         document.getElementById('ticketNumberError').classList.remove('hidden');
         return;
     } else {
@@ -809,49 +817,48 @@ if (!localStorage.getItem("tickets")) {
             ? 'تنبيه: اسم الحساب هذا مستخدم في تذكرة سابقة' 
             : 'Warning: This account name has been used in a previous ticket');
     }
-            
-            // Create new ticket
-            const newTicket = {
-                id: tickets.length > 0 ? Math.max(...tickets.map(t => t.id)) + 1 : 1,
-                ticketNumber,
-                accountName,
-                platform,
-                openDate,
-                openTime,
-                closeTime: "",
-                phoneNumber,
-                reminder6h: false,
-                reminder24h: false,
-                reminder48h: false,
-                closeReason: "",
-                status: "open",
-                agent: currentUser.username,
-                createdBy: currentUser.username,
-                createdAt: new Date().toISOString()
-            };
-            
-            tickets.push(newTicket);
-            localStorage.setItem("tickets", JSON.stringify(tickets));
 
-            // Reset form
-            this.reset();
-            
-            // Set today's date and current time as default
-            const today = new Date();
-            document.getElementById('openDate').valueAsDate = today;
-            
-            const now = new Date();
-            const hours = now.getHours().toString().padStart(2, '0');
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            document.getElementById('openTime').value = `${hours}:${minutes}`;
-            
-            // Update ticket counts and table
-            updateTicketCounts();
-            loadTickets();
-            
-            // Show success message
-            alert(currentLang === 'ar' ? 'تم إضافة التذكرة بنجاح' : 'Ticket added successfully');
-        });
+    // 👉 إنشاء التذكرة الجديدة
+    const newTicket = {
+        id: tickets.length > 0 ? Math.max(...tickets.map(t => t.id)) + 1 : 1,
+        ticketNumber: ticketNumber || '-', // لو فاضي نحط "-" عشان الجدول
+        accountName,
+        platform,
+        openDate,
+        openTime,
+        closeTime: "",
+        phoneNumber,
+        reminder6h: false,
+        reminder24h: false,
+        reminder48h: false,
+        closeReason: "",
+        status: "open",
+        agent: currentUser.username,
+        createdBy: currentUser.username,
+        createdAt: new Date().toISOString()
+    };
+
+    tickets.push(newTicket);
+    localStorage.setItem("tickets", JSON.stringify(tickets));
+
+    // Reset form
+    this.reset();
+
+    // تعيين التاريخ والوقت الحاليين
+    const today = new Date();
+    document.getElementById('openDate').valueAsDate = today;
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    document.getElementById('openTime').value = `${hours}:${minutes}`;
+
+    // تحديث الجدول والإحصائيات
+    updateTicketCounts();
+    loadTickets();
+
+    // رسالة نجاح
+    alert(currentLang === 'ar' ? 'تم إضافة التذكرة بنجاح' : 'Ticket added successfully');
+});
         // Load tickets into table
         function loadTickets(filteredTickets = null) {
             const tbody = document.getElementById('ticketsTableBody');
